@@ -1,0 +1,21 @@
+{
+  "b_max_packet_size_0": 64,
+  "bcd_device": 256,
+  "bcd_usb": 512,
+  "bm_attributes": 224,
+  "config_string": null,
+  "ffs_blob_b64": "AwAAAFsAAAABAAAACQAAAAkEAAABAwECAAkhEQEAASJeAAcFgQNAAAEJBAEAAQMBAQAJIREBAAEinwAHBYIDQAABCQQCAAEDAQEACSERAQABIj0ABwWDA0AAAQ==",
+  "handshakes": [],
+  "hid_reports_b64": {
+    "0": "BQEJAqEBCQGhAAUJGQEpBRUAJQF1AZUFgQJ1AZUDgQMGAP8JQHUIlQIVgSV/gQIFAQk4FYElf3UIlQGBBgkwCTEWAYAm/391EJUCgQbABgD/CQIVACUBdQiVWrEBwA==",
+    "1": "BQEJBqEBhQEFBxngKecVACUBdQGVCIECGQAq/wAVACb/AHUIlQ6BAMAFDAkBoQGFAhkAKjwCFQAmPAKVAXUQgQB1CJUNgQHABQEJgKEBhQMZgSmDFQAlAXUBlQOBApUFgQF1CJUOgQHABQEJAKEBhQQJAxUAJv8ANQBG/wB1CJUPgQDABQEJAKEBhQUJAxUAJv8ANQBG/wB1CJUPgQDA",
+    "2": "BQEJBqEBBQcZ4CnnFQAlAXUBlQiBAoEBGQAq/wAVACb/AHUIlQaBAAUIGQEpAxUAJQF1AZUDkQKVBZEBwA=="
+  },
+  "manufacturer": "Generic Proxy",
+  "max_power": 500,
+  "max_speed": "full-speed",
+  "pid": 192,
+  "product": "Razer Viper V3 Pro",
+  "serial": "000000000000",
+  "vid": 5426
+}

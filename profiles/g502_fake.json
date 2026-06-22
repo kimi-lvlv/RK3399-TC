@@ -1,0 +1,18 @@
+{
+  "bcd_device": 26880,
+  "bcd_usb": 512,
+  "bm_attributes": 160,
+  "config_string": "U169.00_B0009           ",
+  "ffs_blob_b64": "AwAAAEIAAAABAAAABgAAAAkEAAABAwECAAkhEQEAASJDAAcFgQMIAAEJBAEAAQMAAAAJIREBAAEilwAHBYIDFAAB",
+  "hid_reports_b64": {
+    "0": "BQEJAqEBCQGhAAUJGQEpEBUAJQGVEHUBgQIFARYBgCb/f3UQlQIJMAkxgQYVgSV/dQiVAQk4gQYFDAo4ApUBgQbAwA==",
+    "1": "BQEJBqEBhQEFBxngKecVACUBdQGVCIECgQOVBnUIFQAmpAAZACqkAIEAwAUMCQGhAYUDdRCVAhUBJowCGQEqjAKBAMAFAQmAoQGFBHUClQEVASUDCYIJgQmDgWB1BoEDwAYA/wkBoQGFEHUIlQYVACb/AAkBgQAJAZEAwAYA/wkCoQGFEXUIlRMVACb/AAkCgQAJApEAwA=="
+  },
+  "manufacturer": "Logitech",
+  "max_power": 300,
+  "max_speed": "full-speed",
+  "pid": 49291,
+  "product": "G502 HERO Gaming Mouse",
+  "serial": "208536C44743",
+  "vid": 1133
+}
