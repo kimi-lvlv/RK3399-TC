@@ -153,17 +153,19 @@ fi
 cat << 'EOF' > /etc/systemd/system/rust_proxy.service
 [Unit]
 Description=Rust Proxy Service
-After=network.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
+Environment=RUST_LOG=info
 # =========================================================
 # 注意：请确保下方 ExecStart 指向您开发板上实际的二进制文件路径！
 # 如果您把它放在了别的地方，请手动修改这个文件或此脚本。
 # =========================================================
 ExecStart=/root/TC/rust_proxy/target/release/rust_proxy
-WorkingDirectory=/root/TC/rust_proxy
-Restart=on-failure
+WorkingDirectory=/root/TC
+Restart=always
 RestartSec=5
 
 [Install]
