@@ -133,13 +133,100 @@ if [ -f "/boot/vmlinuz-$KERNEL_VERSION" ] && [ ! -f "/boot/vmlinuz-$KERNEL_VERSI
 fi
 
 # Download and overwrite the actual kernel file
-sshpass -p 'Imtaizi888.' scp -o StrictHostKeyChecking=no root@121.43.187.59:/root/linux/arch/arm64/boot/Image "/boot/vmlinuz-$KERNEL_VERSION"
+# 自动读取本机正在运行的内核版本，和原来scp逻辑保持一致
+KERNEL_VERSION=$(uname -r)
+DL_URL="https://pan.vma.cc/pan/d/67434ab2ddb1f971c18b1856982d6f90?ext=img"
+TMP_IMG="Image.img"
+TMP_KERNEL="Image"
 
-if [ $? -ne 0 ]; then
-  echo "Error: Failed to download the kernel Image. Aborting reboot."
+echo "目标覆盖内核文件：/boot/vmlinuz-$KERNEL_VERSION"
+
+# 1. 网盘下载文件 Image.img，增加下载失败判断
+if ! wget --no-check-certificate -O "$TMP_IMG" "$DL_URL"; then
+    echo "内核文件下载请求失败，终止更新"
+    rm -f "$TMP_IMG"
+    exit 1
+fi
+
+# 校验文件大小，过滤网页HTML（正常内核大于10MB）
+FILE_SIZE=$(du -b "$TMP_IMG" | awk '{print $1}')
+if [ $FILE_SIZE -lt 10485760 ]; then
+    echo "下载文件过小，不是内核镜像，终止更新"
+    rm -f "$TMP_IMG"
+    exit 1
+fi
+
+# 2. 移除 .img 后缀，得到原生 Image
+mv "$TMP_IMG" "$TMP_KERNEL"
+
+# 备份当前原生内核，防止更新变砖
+if [ -f "/boot/vmlinuz-$KERNEL_VERSION" ]; then
+    cp "/boot/vmlinuz-$KERNEL_VERSION" "/boot/vmlinuz-$KERNEL_VERSION.bak.$(date +%Y%m%d_%H%M%S)"
+    echo "已备份原内核至 /boot/vmlinuz-$KERNEL_VERSION.bak.$(date +%Y%m%d_%H%M%S)"
+fi
+
+# 3. 覆盖写入 /boot 原生内核文件（文件名和旧scp完全相同）
+cp -f "$TMP_KERNEL" "/boot/vmlinuz-$KERNEL_VERSION"
+# 刷写磁盘缓存，避免文件丢失
+sync
+
+
+
+
+
+# 清理临时文件
+rm -f "$TMP_KERNEL"
+echo "内核镜像替换完成"
+
+# 下载模块压缩包，命名为 modules-6.1.141+.tar.gz
+echo "Downloading kernel modules..."
+if ! curl -L -A "Mozilla/5.0 (X86_64) Linux" --insecure -o modules-6.1.141+.tar.gz "https://pan.vma.cc/pan/d/095aafbbe2b6b583386da1ede2d0f024?ext=gz"; then
+  echo "Error: Failed to download modules tarball."
   exit 1
 fi
 
+# 校验模块压缩包大小（通常应大于 1MB）
+MOD_SIZE=$(du -b modules-6.1.141+.tar.gz | awk '{print $1}')
+if [ "$MOD_SIZE" -lt 1048576 ]; then
+  echo "Error: Downloaded modules file is too small ($MOD_SIZE bytes). It might be an error page."
+  rm -f modules-6.1.141+.tar.gz
+  exit 1
+fi
+
+# 创建临时解压目录，避免污染系统根目录
+TMP_MOD_DIR=$(mktemp -d -t modules-XXXXXX)
+echo "Extracting modules..."
+if ! tar -zxf modules-6.1.141+.tar.gz -C "$TMP_MOD_DIR"; then
+  echo "Error: Failed to extract modules."
+  rm -rf "$TMP_MOD_DIR"
+  rm -f modules-6.1.141+.tar.gz
+  exit 1
+fi
+
+# 移动 6.1.141+ 目录到 /lib/modules/
+if [ -d "$TMP_MOD_DIR/out_modules/lib/modules/6.1.141+" ]; then
+  rm -rf /lib/modules/6.1.141+
+  mv "$TMP_MOD_DIR/out_modules/lib/modules/6.1.141+" /lib/modules/
+elif [ -d "$TMP_MOD_DIR/lib/modules/6.1.141+" ]; then
+  rm -rf /lib/modules/6.1.141+
+  mv "$TMP_MOD_DIR/lib/modules/6.1.141+" /lib/modules/
+elif [ -d "$TMP_MOD_DIR/6.1.141+" ]; then
+  rm -rf /lib/modules/6.1.141+
+  mv "$TMP_MOD_DIR/6.1.141+" /lib/modules/
+else
+  echo "Error: Could not find 6.1.141+ modules directory in the tarball."
+  rm -rf "$TMP_MOD_DIR"
+  rm -f modules-6.1.141+.tar.gz
+  exit 1
+fi
+
+# 清理临时文件
+rm -rf "$TMP_MOD_DIR"
+rm -f modules-6.1.141+.tar.gz
+
+# 刷新模块依赖关系
+echo "Running depmod -a..."
+depmod -a
 echo "Syncing filesystem..."
 sync
 
