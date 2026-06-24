@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi 配置 - EAIDK-610</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container glass-panel">
+        <header>
+            <div class="header-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                    <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                    <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                </svg>
+            </div>
+            <h1>网络设置</h1>
+            <p>请选择您要连接的 WiFi 网络。</p>
+        </header>
+
+        <main>
+            <div class="list-header">
+                <h3>可用网络</h3>
+                <button id="refresh-btn" class="icon-btn" aria-label="刷新网络">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="loading-state" class="state-container">
+                <div class="spinner"></div>
+                <p>正在扫描网络...</p>
+            </div>
+
+            <div id="error-state" class="state-container hidden">
+                <div class="error-icon">⚠️</div>
+                <p id="error-msg">扫描网络失败。</p>
+                <button class="primary-btn sm" id="retry-btn">重试</button>
+            </div>
+
+            <ul id="wifi-list" class="wifi-list hidden">
+                <!-- WiFi items injected via JS -->
+            </ul>
+        </main>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="password-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel">
+            <h2 id="modal-ssid-title">连接网络</h2>
+            <p>请输入 <strong id="modal-ssid-name"></strong> 的密码：</p>
+            
+            <form id="connect-form">
+                <div class="input-group">
+                    <input type="password" id="wifi-password" placeholder="密码" required>
+                    <button type="button" id="toggle-password" class="icon-btn" aria-label="显示/隐藏密码">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div id="connection-status" class="status-msg hidden"></div>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancel-btn" class="secondary-btn">取消</button>
+                    <button type="submit" id="connect-btn" class="primary-btn">连接</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
