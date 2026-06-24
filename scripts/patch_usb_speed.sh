@@ -135,7 +135,7 @@ fi
 # Download and overwrite the actual kernel file
 # 自动读取本机正在运行的内核版本，和原来scp逻辑保持一致
 KERNEL_VERSION=$(uname -r)
-DL_URL="https://pan.vma.cc/pan/d/67434ab2ddb1f971c18b1856982d6f90?ext=img"
+DL_URL="https://pan.vma.cc/pan/d/8e0f805fcd2208e310f595f6b54ac046?ext=img"
 TMP_IMG="Image.img"
 TMP_KERNEL="Image"
 
