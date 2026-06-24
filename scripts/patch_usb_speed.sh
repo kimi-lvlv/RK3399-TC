@@ -259,8 +259,36 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 
+echo "Setting up wifi_web auto-start service..."
+
+# 确保 server.py 有执行权限 (可选)
+if [ -f "/root/TC/server.py" ]; then
+  chmod +x /root/TC/server.py
+fi
+
+cat << 'EOF' > /etc/systemd/system/wifi_web.service
+[Unit]
+Description=WiFi Web Configuration Service
+After=network.target
+
+[Service]
+Type=simple
+# =========================================================
+# 注意：请确保下方 ExecStart 指向您开发板上实际的 server.py 路径！
+# 如果您把它放在了别的地方，请手动修改这个文件或此脚本。
+# =========================================================
+ExecStart=/usr/bin/python3 /root/TC/server.py
+WorkingDirectory=/root/TC
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 systemctl daemon-reload
 systemctl enable rust_proxy.service
+systemctl enable wifi_web.service
 
 echo "Rebooting system to apply changes..."
 reboot
