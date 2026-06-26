@@ -286,26 +286,14 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 
-echo "Setting up modprobe_brcmfmac auto-start service..."
+echo "Setting up brcmfmac to load on boot..."
 
-cat << 'EOF' > /etc/systemd/system/modprobe_brcmfmac.service
-[Unit]
-Description=Load brcmfmac module on boot
-After=network.target
-
-[Service]
-Type=oneshot
-ExecStart=/sbin/modprobe brcmfmac
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-EOF
+mkdir -p /etc/modules-load.d
+echo "brcmfmac" > /etc/modules-load.d/brcmfmac.conf
 
 systemctl daemon-reload
 systemctl enable rust_proxy.service
 systemctl enable wifi_web.service
-systemctl enable modprobe_brcmfmac.service
 
 echo "Rebooting system to apply changes..."
 reboot
